@@ -1,0 +1,10 @@
+{
+        auto_https off
+}
+
+:80 {
+        root * ./dist/
+        file_server
+
+        reverse_proxy /wisp* localhost:1338
+}

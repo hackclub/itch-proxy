@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config block_type="white">
+  <port port_number="1337" />
+
+  <!--Blacklisting targets--> 
+  <list_hostname hostname="itch.io" />
+</config>

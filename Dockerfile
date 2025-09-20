@@ -1,20 +1,25 @@
-FROM node:18-alpine
+FROM rust:1.90 AS builder
+RUN cargo install --git https://github.com/MercuryWorkshop/epoxy-tls epoxy-server
 
-ENV NODE_ENV=production
-ARG NPM_BUILD="npm install --omit=dev"
-EXPOSE 8080/tcp
+FROM debian:bullseye-slim
 
-LABEL maintainer="Mercury Workshop"
-LABEL summary="Scramjet Demo Image"
-LABEL description="Example application of Scramjet"
+WORKDIR /usr/src/server
 
-WORKDIR /app
-
-COPY ["package.json", "package-lock.json", "./"]
-RUN apk add --upgrade --no-cache python3 make g++
-RUN $NPM_BUILD
+RUN apt-get update -qq && \
+    apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl wget && \
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg && \
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | tee /etc/apt/sources.list.d/caddy-stable.list && \
+    chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg && \
+    chmod o+r /etc/apt/sources.list.d/caddy-stable.list && \
+    apt-get update && \
+    apt-get install caddy && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives 
 
 COPY . .
+COPY --from=builder /usr/local/cargo/bin/epoxy-server /usr/src/server/epoxy-server
 
-ENTRYPOINT [ "node" ]
-CMD ["src/index.js"]
+RUN wget "https://github.com/MercuryWorkshop/Woeful/releases/download/v1.0.0/woeful-x86_64-linux-musl"
+
+EXPOSE 443
+EXPOSE 80
+CMD ["bash", "start.sh"]
