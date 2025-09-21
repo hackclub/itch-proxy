@@ -2,9 +2,15 @@
         auto_https off
 }
 
-:80 {
+:85 {
         root * ./dist/
         file_server
+
+        handle_errors {
+          rewrite * /404.html
+          templates
+          file_server
+        }
 
         reverse_proxy /wisp* localhost:1338
 }

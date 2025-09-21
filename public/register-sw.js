@@ -11,6 +11,10 @@ const swAllowedHostnames = ["localhost", "127.0.0.1"];
  * Used in 404.html and index.html
  */
 async function registerSW() {
+	if ((await navigator.serviceWorker.getRegistration()) !== undefined) {
+    (await navigator.serviceWorker.getRegistration()).unregister();
+	}
+
 	if (!navigator.serviceWorker) {
 		if (
 			location.protocol !== "https:" &&
@@ -22,4 +26,6 @@ async function registerSW() {
 	}
 
 	await navigator.serviceWorker.register(stockSW);
+
+
 }

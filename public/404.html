@@ -10,14 +10,20 @@
 		<base href="/" />
 		<link rel="shortcut icon" content="favicon.ico" />
 		<link rel="stylesheet" href="index.css" />
+		<script src="/scram/scramjet.all.js"></script>
+		<script src="/baremux/index.js" defer></script>
+		<script src="/epoxy/index.js" defer></script>
+		<script src="/register-sw.js" defer></script>
+		<script src="/search.js" defer></script>
+		<script src="/index.js" defer></script>
 	</head>
 
 	<body>
 		<div class="logo-wrapper left-margin">
-			<h1>Scramjet | Error</h1>
+			<h1>Scramjet | Redirecting</h1>
 		</div>
 		<div class="desc left-margin">
-			<p>The server could not route your request.</p>
+			<p>If this is a valid url please wait for the page to reload.</p>
 		</div>
 		<footer>
 			<a
@@ -25,7 +31,38 @@
 				href="credits.html"
 				>Credits</a
 			>
-			<span>Scramjet &copy; MW 2025</span>
+				<span>Based on Scramjet from Mercury Workshop</span>
 		</footer>
+    </script>
+    <script defer>
+    document.addEventListener("DOMContentLoaded", async () => {
+          const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+
+      try {
+        await registerSW();
+      } catch (err) {
+        error.textContent = "Failed to register service worker.";
+        errorCode.textContent = err.toString();
+        throw err;
+      }
+
+      let wispUrl =
+        (location.protocol === "https:" ? "wss" : "ws") +
+        "://" +
+        location.host +
+        "/wisp/";
+
+        if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+        }
+
+      setTimeout(
+        () => {
+          window.location.reload();
+        }, 1000
+      )
+    });
+    </script>
+
 	</body>
 </html>

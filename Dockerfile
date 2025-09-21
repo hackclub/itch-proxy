@@ -1,7 +1,5 @@
-FROM rust:1.90 AS builder
+FROM rust:1.90
 RUN cargo install --git https://github.com/MercuryWorkshop/epoxy-tls epoxy-server
-
-FROM debian:bullseye-slim
 
 WORKDIR /usr/src/server
 
@@ -15,10 +13,9 @@ RUN apt-get update -qq && \
     apt-get install caddy && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives 
 
-COPY . .
-COPY --from=builder /usr/local/cargo/bin/epoxy-server /usr/src/server/epoxy-server
-
 RUN wget "https://github.com/MercuryWorkshop/Woeful/releases/download/v1.0.0/woeful-x86_64-linux-musl"
+
+COPY . .
 
 EXPOSE 443
 EXPOSE 80
