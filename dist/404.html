@@ -6,7 +6,7 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
 		/>
-		<title>Scramjet | Error</title>
+		<title>Scramjet</title>
 		<base href="/" />
 		<link rel="shortcut icon" content="favicon.ico" />
 		<link rel="stylesheet" href="index.css" />
@@ -33,10 +33,13 @@
 			>
 				<span>Based on Scramjet from Mercury Workshop</span>
 		</footer>
+    <iframe style="display: none" id="sj-frame"></iframe>
     </script>
     <script defer>
     document.addEventListener("DOMContentLoaded", async () => {
-          const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+      if(!window.location.pathname.startsWith("/share/")){
+        return;
+      }
 
       try {
         await registerSW();
@@ -56,11 +59,17 @@
           await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
         }
 
-      setTimeout(
-        () => {
-          window.location.reload();
-        }, 1000
-      )
+        let frame = document.getElementById("sj-frame");
+        frame.style.display = "block";
+        frame.addEventListener("load", (event) => {
+          window.history.pushState({}, "Scramjet", "/share" + event.target.contentWindow.location.href.split(event.target.contentWindow.location.host)[1])
+        })
+
+        let path = window.location.href.split(window.location.host)[1];
+        window.history.pushState({}, "Scramjet", "/")
+        frame.src = path.split("/share/")[1];
+        window.history.pushState({}, "Scramjet", path)
+        
     });
     </script>
 

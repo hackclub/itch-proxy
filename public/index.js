@@ -46,22 +46,24 @@ if(form != undefined) {
       throw err;
     }
 
-      let wispUrl =
-        (location.protocol === "https:" ? "wss" : "ws") +
-        "://" +
-        location.host +
-        "/wisp/";
-
-        if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-        }
-
     const url = search(address.value, searchEngine.value);
 
     let frame = document.getElementById("sj-frame");
     frame.style.display = "block";
+    let wispUrl =
+      (location.protocol === "https:" ? "wss" : "ws") +
+      "://" +
+      location.host +
+      "/wisp/";
+    if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
+      await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
+    }
     const sjEncode = scramjet.encodeUrl.bind(scramjet);
-    window.location = sjEncode(url);
+    frame.addEventListener("load", (event) => {
+      window.history.pushState({}, "Scramjet", "/share" + event.target.contentWindow.location.href.split(event.target.contentWindow.location.host)[1])
+    })
+    frame.src = sjEncode(url);
+    window.history.pushState({}, "Scramjet", "/share" + sjEncode(url))
   });
 }
 

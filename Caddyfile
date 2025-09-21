@@ -2,7 +2,7 @@
         auto_https off
 }
 
-:85 {
+:80 {
         root * ./dist/
         file_server
 

@@ -2,9 +2,9 @@
 bind = ["tcp", "localhost:1338"]
 
 [stream]
-# allow_hosts = [".*itch.io", ".*itch.zone", ".*google.*"]
-# block_hosts = [".*"]
-# allow_direct_ip = false
-# allow_loopback = false
-# allow_udp = false
-# allow_ports = [[80, 80], [443, 443]]
+allow_hosts = [".*itch.io", ".*itch.zone", ".*google.*"]
+block_hosts = [".*"]
+allow_direct_ip = false
+allow_loopback = false
+allow_udp = false
+allow_ports = [[80, 80], [443, 443]]
