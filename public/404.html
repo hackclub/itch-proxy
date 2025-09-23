@@ -11,8 +11,8 @@
 		<link rel="shortcut icon" content="favicon.ico" />
 		<link rel="stylesheet" href="index.css" />
 		<script src="/scram/scramjet.all.js"></script>
-		<script src="/baremux/index.js" defer></script>
-		<script src="/epoxy/index.js" defer></script>
+		<!-- <script src="/baremux/index.js" defer></script> -->
+		<!-- <script src="/epoxy/index.js" defer></script> -->
 		<script src="/register-sw.js" defer></script>
 		<script src="/search.js" defer></script>
 		<script src="/index.js" defer></script>
@@ -26,52 +26,63 @@
 			<p>If this is a valid url please wait for the page to reload.</p>
 		</div>
 		<footer>
-			<a
-				title="License information"
-				href="credits.html"
-				>Credits</a
-			>
-				<span>Based on Scramjet from Mercury Workshop</span>
+			<a title="License information" href="credits.html">Credits</a>
+			<span>Based on Scramjet from Mercury Workshop</span>
 		</footer>
-    <iframe style="display: none" id="sj-frame"></iframe>
-    </script>
-    <script defer>
-    document.addEventListener("DOMContentLoaded", async () => {
-      if(!window.location.pathname.startsWith("/share/")){
-        return;
-      }
+		<iframe style="display: none" id="sj-frame"></iframe>
+		<script defer>
+			document.addEventListener("DOMContentLoaded", async () => {
+				if (!window.location.pathname.startsWith("/share/")) {
+					return;
+				}
 
-      try {
-        await registerSW();
-      } catch (err) {
-        error.textContent = "Failed to register service worker.";
-        errorCode.textContent = err.toString();
-        throw err;
-      }
+				const { ScramjetController } = $scramjetLoadController();
 
-      let wispUrl =
-        (location.protocol === "https:" ? "wss" : "ws") +
-        "://" +
-        location.host +
-        "/wisp/";
+				let wispUrl =
+					(location.protocol === "https:" ? "wss" : "ws") +
+					"://" +
+					location.host +
+					"/wisp/";
 
-        if ((await connection.getTransport()) !== "/epoxy/index.mjs") {
-          await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
-        }
+				const scramjet = new ScramjetController({
+					files: {
+						wasm: "/scram/scramjet.wasm.wasm",
+						all: "/scram/scramjet.all.js",
+						sync: "/scram/scramjet.sync.js",
+					},
+					wisp: wispUrl,
+				});
 
-        let frame = document.getElementById("sj-frame");
-        frame.style.display = "block";
-        frame.addEventListener("load", (event) => {
-          window.history.pushState({}, "Scramjet", "/share" + event.target.contentWindow.location.href.split(event.target.contentWindow.location.host)[1])
-        })
+				try {
+					if (!(await registerSW())) {
+						setTimeout(() => window.location.reload(), 1000);
+					}
+				} catch (err) {
+					error.textContent = "Failed to register service worker.";
+					errorCode.textContent = err.toString();
+					throw err;
+				}
 
-        let path = window.location.href.split(window.location.host)[1];
-        window.history.pushState({}, "Scramjet", "/")
-        frame.src = path.split("/share/")[1];
-        window.history.pushState({}, "Scramjet", path)
-        
-    });
-    </script>
+				scramjet.init();
 
+				let frame = document.getElementById("sj-frame");
+				frame.style.display = "block";
+				frame.addEventListener("load", (event) => {
+					window.history.pushState(
+						{},
+						"Scramjet",
+						"/share" +
+							event.target.contentWindow.location.href.split(
+								event.target.contentWindow.location.host
+							)[1]
+					);
+				});
+
+				let path = window.location.href.split(window.location.host)[1];
+				window.history.pushState({}, "Scramjet", "/");
+				frame.src = path.split("/share/")[1];
+				window.history.pushState({}, "Scramjet", path);
+			});
+		</script>
 	</body>
 </html>
