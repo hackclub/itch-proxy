@@ -2,9 +2,8 @@
 bind = ["tcp", "localhost:1338"]
 
 [stream]
-allow_hosts = [".*itch.io", ".*itch.zone", ".*google.*", ".*publicsuffix.org"]
+allow_hosts = ["^(?:.*\\.)?itch\\.io$", "^(?:.*\\.)?itch\\.zone$", "^(?:.*\\.)?ytimg\\.com$", "^(?:.*\\.)?googletagmanager\\.com$", "^(?:.*\\.)?publicsuffix\\.org$"]
 block_hosts = [".*"]
 allow_direct_ip = false
 allow_loopback = false
 allow_udp = false
-allow_ports = [[80, 80], [443, 443]]
