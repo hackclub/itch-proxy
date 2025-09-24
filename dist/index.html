@@ -6,41 +6,26 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
 		/>
-		<title>itch.io Proxy</title>
+		<title>Daydream Itch.io Proxy</title>
 
 		<link rel="shortcut icon" content="favicon.webp" />
 
-		<link rel="stylesheet" href="index.css" />
-		<script src="/scram/scramjet.all.js"></script>
-		<!-- <script src="baremux/index.js" defer></script> -->
-		<!-- <script src="epoxy/index.js" defer></script> -->
-		<script src="register-sw.js" defer></script>
-		<script src="search.js" defer></script>
-		<script src="index.js" defer></script>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="main.css" />
+		<script>
+			window.location.replace("/share/scramjet/" + encodeURIComponent("https://itch.io"))
+		</script>
 	</head>
 
 	<body>
-		<div title="Scramjet Logo" class="flex-center logo-wrapper header-center">
-			<h1>itch.io Proxy</h1>
+		<div id="content">
+			<h1>Redirecting...</h1>
+			<p>Based on Scramjet from Mercury Workshop</p>
 		</div>
 
-		<form id="sj-form" class="flex-center">
-			<input
-				id="sj-search-engine"
-				value="https://itch.io/search?q=%s"
-				type="hidden"
-			/>
-			<input id="sj-address" type="text" placeholder="Search itch.io" />
-		</form>
-		<div class="desc left-margin">
-			<p id="sj-error"></p>
-			<pre id="sj-error-code"></pre>
-		</div>
-		<footer>
-			<div>
-				<span>Based on Scramjet from Mercury Workshop</span>
-			</div>
-		</footer>
-		<iframe style="display: none" id="sj-frame"></iframe>
+		<a id="credits" href="/credits.html">Credits & Licenses</a>
 	</body>
 </html>

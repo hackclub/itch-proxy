@@ -1,0 +1,55 @@
+@font-face {
+  font-family: "Daydream New";
+  src: url(/serif.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap
+}
+
+body {
+    min-height: 100vh;
+    background-image: url('/brush.png'), url('/cloudy-bg-dim.png'), linear-gradient(to bottom, #CCF4FD, #AECDF6);
+    background-repeat: repeat, no-repeat, no-repeat;
+    background-size: contain, cover, cover;
+    background-position: center center, center 20vh, center center;
+    background-blend-mode: overlay, normal, normal;
+    font-family: "Atkinson Hyperlegible", sans-serif;
+}
+
+#content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 1rem;
+    background-color: #FEF9DC;
+    border: 2px solid #D3B180;
+    padding: 20px 24px;
+    max-width: 480px;
+}
+
+#content h1 {
+    font-family: "Daydream New";
+    color: rgb(131, 55, 16);
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+}
+
+#content p {
+    color: rgb(139, 69, 19);
+    text-align: center;
+    margin: 0;
+}
+
+#credits {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #071f33;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+#credits:hover {
+    opacity: 0.75;
+}
